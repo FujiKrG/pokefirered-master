@@ -177,34 +177,34 @@ static const union AnimCmd sAnim_RollerSkatesFaceEast[] = {
 };
 
 static const union AnimCmd sAnim_RollerSkatesGoSouth[] = {
-    ANIMCMD_FRAME(1, 5),
+    ANIMCMD_FRAME(1, 6),
     ANIMCMD_FRAME(0, 4),
-    ANIMCMD_FRAME(2, 5),
+    ANIMCMD_FRAME(2, 6),
     ANIMCMD_FRAME(0, 4),
     ANIMCMD_JUMP(0),
 };
 
 static const union AnimCmd sAnim_RollerSkatesGoNorth[] = {
-    ANIMCMD_FRAME(4, 5),
+    ANIMCMD_FRAME(4, 6),
     ANIMCMD_FRAME(3, 4),
-    ANIMCMD_FRAME(5, 5),
+    ANIMCMD_FRAME(5, 6),
     ANIMCMD_FRAME(3, 4),
     ANIMCMD_JUMP(0),
 };
 
 static const union AnimCmd sAnim_RollerSkatesGoWest[] = {
-    ANIMCMD_FRAME(7, 5),
+    ANIMCMD_FRAME(7, 6),
     ANIMCMD_FRAME(6, 4),
-    ANIMCMD_FRAME(8, 5),
+    ANIMCMD_FRAME(8, 6),
     ANIMCMD_FRAME(6, 4),
     ANIMCMD_JUMP(0),
 };
 
 static const union AnimCmd sAnim_RollerSkatesGoEast[] = {
     ANIMCMD_FRAME(7, 6, .hFlip = TRUE),
-    ANIMCMD_FRAME(6, 6, .hFlip = TRUE),
+    ANIMCMD_FRAME(6, 4, .hFlip = TRUE),
     ANIMCMD_FRAME(8, 6, .hFlip = TRUE),
-    ANIMCMD_FRAME(6, 6, .hFlip = TRUE),
+    ANIMCMD_FRAME(6, 4, .hFlip = TRUE),
     ANIMCMD_JUMP(0),
 };
 static const union AnimCmd sAnim_FaceSouth[] = {

@@ -7009,6 +7009,45 @@ void InitMovementNormal(struct ObjectEvent *objectEvent, struct Sprite *sprite, 
     SetStepAnimHandleAlternation(objectEvent, sprite, functions[speed](objectEvent->facingDirection));
 }
 
+static void InitMovementRollerSkates(struct ObjectEvent *objectEvent, struct Sprite *sprite, u8 direction)
+{
+    u8 animNum;
+
+    InitNpcForMovement(objectEvent, sprite, direction, MOVE_SPEED_FAST_1_5);
+
+    switch (direction)
+    {
+    case DIR_SOUTH:
+        animNum = ANIM_STD_GO_SOUTH;
+        break;
+    case DIR_NORTH:
+        animNum = ANIM_STD_GO_NORTH;
+        break;
+    case DIR_WEST:
+        animNum = ANIM_STD_GO_WEST;
+        break;
+    case DIR_EAST:
+        animNum = ANIM_STD_GO_EAST;
+        break;
+    default:
+        return;
+    }
+
+    StartSpriteAnimIfDifferent(sprite, animNum);
+}
+
+static bool8 UpdateMovementRollerSkates(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    if (NpcTakeStep(sprite))
+    {
+        ShiftStillObjectEventCoords(objectEvent);
+        objectEvent->triggerGroundEffectsOnStop = TRUE;
+        return TRUE;
+    }
+
+    return FALSE;
+}
+
 void StartRunningAnim(struct ObjectEvent *objectEvent, struct Sprite *sprite, u8 direction)
 {
     InitNpcForMovement(objectEvent, sprite, direction, MOVE_SPEED_FAST_1);
@@ -8322,13 +8361,13 @@ static bool8 MovementAction_WalkFasterRight_Step1(struct ObjectEvent *objectEven
 
 static bool8 MovementAction_WalkRollerSkatesDown_Step0(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
-    InitMovementNormal(objectEvent, sprite, DIR_SOUTH, MOVE_SPEED_FAST_1_5);
+    InitMovementRollerSkates(objectEvent, sprite, DIR_SOUTH);
     return MovementAction_WalkRollerSkatesDown_Step1(objectEvent, sprite);
 }
 
 static bool8 MovementAction_WalkRollerSkatesDown_Step1(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
-    if (UpdateMovementNormal(objectEvent, sprite))
+    if (UpdateMovementRollerSkates(objectEvent, sprite))
     {
         sprite->data[2] = 2;
         return TRUE;
@@ -8338,13 +8377,13 @@ static bool8 MovementAction_WalkRollerSkatesDown_Step1(struct ObjectEvent *objec
 
 static bool8 MovementAction_WalkRollerSkatesUp_Step0(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
-    InitMovementNormal(objectEvent, sprite, DIR_NORTH, MOVE_SPEED_FAST_1_5);
+    InitMovementRollerSkates(objectEvent, sprite, DIR_NORTH);
     return MovementAction_WalkRollerSkatesUp_Step1(objectEvent, sprite);
 }
 
 static bool8 MovementAction_WalkRollerSkatesUp_Step1(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
-    if (UpdateMovementNormal(objectEvent, sprite))
+    if (UpdateMovementRollerSkates(objectEvent, sprite))
     {
         sprite->data[2] = 2;
         return TRUE;
@@ -8355,16 +8394,16 @@ static bool8 MovementAction_WalkRollerSkatesUp_Step1(struct ObjectEvent *objectE
 static bool8 MovementAction_WalkRollerSkatesLeft_Step0(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
     if (objectEvent->directionOverwrite)
-        InitMovementNormal(objectEvent, sprite, objectEvent->directionOverwrite, MOVE_SPEED_FAST_1_5);
+        InitMovementRollerSkates(objectEvent, sprite, objectEvent->directionOverwrite);
     else
-        InitMovementNormal(objectEvent, sprite, DIR_WEST, MOVE_SPEED_FAST_1_5);
+        InitMovementRollerSkates(objectEvent, sprite, DIR_WEST);
 
     return MovementAction_WalkRollerSkatesLeft_Step1(objectEvent, sprite);
 }
 
 static bool8 MovementAction_WalkRollerSkatesLeft_Step1(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
-    if (UpdateMovementNormal(objectEvent, sprite))
+    if (UpdateMovementRollerSkates(objectEvent, sprite))
     {
         sprite->data[2] = 2;
         return TRUE;
@@ -8375,16 +8414,16 @@ static bool8 MovementAction_WalkRollerSkatesLeft_Step1(struct ObjectEvent *objec
 static bool8 MovementAction_WalkRollerSkatesRight_Step0(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
     if (objectEvent->directionOverwrite)
-        InitMovementNormal(objectEvent, sprite, objectEvent->directionOverwrite, MOVE_SPEED_FAST_1_5);
+        InitMovementRollerSkates(objectEvent, sprite, objectEvent->directionOverwrite);
     else
-        InitMovementNormal(objectEvent, sprite, DIR_EAST, MOVE_SPEED_FAST_1_5);
+        InitMovementRollerSkates(objectEvent, sprite, DIR_EAST);
 
     return MovementAction_WalkRollerSkatesRight_Step1(objectEvent, sprite);
 }
 
 static bool8 MovementAction_WalkRollerSkatesRight_Step1(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
-    if (UpdateMovementNormal(objectEvent, sprite))
+    if (UpdateMovementRollerSkates(objectEvent, sprite))
     {
         sprite->data[2] = 2;
         return TRUE;
