@@ -160,8 +160,10 @@
 #define OBJ_EVENT_GFX_BERRY_TREE_EARLY_STAGES     154
 #define OBJ_EVENT_GFX_BERRY_TREE_LATE_STAGES      155
 #define OBJ_EVENT_GFX_OW_MON     156
+#define OBJ_EVENT_GFX_RED_ROLLER_SKATES   157
+#define OBJ_EVENT_GFX_GREEN_ROLLER_SKATES  158
 
-#define NUM_OBJ_EVENT_GFX     157
+#define NUM_OBJ_EVENT_GFX     159
 
 // These are dynamic object gfx ids.
 // They correspond with the values of the VAR_OBJ_GFX_ID_X vars.

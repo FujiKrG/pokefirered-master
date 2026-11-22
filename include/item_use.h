@@ -5,6 +5,7 @@ void ItemUseOutOfBattle_AbilityCapsule(u8 taskId);
 void ItemUseOutOfBattle_AbilityPatch(u8 taskId);
 void ItemUseOutOfBattle_BerryPouch(u8 taskId);
 void ItemUseOutOfBattle_Bike(u8 taskId);
+void ItemUseOutOfBattle_RollerSkates(u8 taskId);
 void ItemUseOutOfBattle_BlackWhiteFlute(u8 taskId);
 void ItemUseOutOfBattle_CoinCase(u8 taskId);
 void ItemUseOutOfBattle_DynamaxCandy(u8 taskId);

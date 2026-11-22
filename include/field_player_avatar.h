@@ -48,6 +48,7 @@ void PlayerWalkFast(u8 direction);
 void PlayerGlide(u8 direction);
 void PlayerRideWaterCurrent(u8 direction);
 void PlayerWalkFaster(u8 direction);
+void PlayerWalkRollerSkates(u8 direction);
 void PlayerRun(u8 direction);
 void PlayerRunSlow(u8 direction);
 void PlayerOnBikeCollide(u8 direction);
@@ -69,6 +70,7 @@ u8 GetRSAvatarGraphicsIdByGender(u8 gender);
 u8 GetRightSideStairsDirection(u8 direction);
 u8 GetLeftSideStairsDirection(u8 direction);
 void SetPlayerAvatarFishing(u8 direction);
+void SetPlayerAvatarRollerSkates(bool8 enabled);
 bool32 MetatileAtCoordsIsWaterTile(s16 x, s16 y);
 
 #endif //GUARD_FIELD_PLAYER_AVATAR_H

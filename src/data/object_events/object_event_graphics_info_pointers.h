@@ -1,4 +1,5 @@
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_RedNormal;
+const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_RedRollerSkates;
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_RedBike;
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_RedSurf;
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_RedFieldMove;
@@ -6,6 +7,7 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_RedFish;
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_RedVSSeeker;
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_RedVSSeekerBike;
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_GreenNormal;
+const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_GreenRollerSkates;
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_GreenBike;
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_GreenSurf;
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_GreenFieldMove;
@@ -316,4 +318,6 @@ const struct ObjectEventGraphicsInfo *const gObjectEventGraphicsInfoPointers[NUM
     [OBJ_EVENT_GFX_BERRY_TREE] =               &gObjectEventGraphicsInfo_BerryTree,
     [OBJ_EVENT_GFX_BERRY_TREE_EARLY_STAGES] =  &gObjectEventGraphicsInfo_BerryTreeEarlyStages,
     [OBJ_EVENT_GFX_BERRY_TREE_LATE_STAGES] =   &gObjectEventGraphicsInfo_BerryTreeLateStages,
+    [OBJ_EVENT_GFX_RED_ROLLER_SKATES] =        &gObjectEventGraphicsInfo_RedRollerSkates,
+    [OBJ_EVENT_GFX_GREEN_ROLLER_SKATES] =      &gObjectEventGraphicsInfo_GreenRollerSkates,
 };

@@ -154,6 +154,59 @@ static const union AnimCmd sAnim_QuintyPlumpGoFastestEast[] = {
     ANIMCMD_JUMP(0),
 };
 
+// Roller Skates - Red/Green
+
+static const union AnimCmd sAnim_RollerSkatesFaceSouth[] = {
+    ANIMCMD_FRAME(0, 16),
+    ANIMCMD_JUMP(0),
+};
+
+static const union AnimCmd sAnim_RollerSkatesFaceNorth[] = {
+    ANIMCMD_FRAME(3, 16),
+    ANIMCMD_JUMP(0),
+};
+
+static const union AnimCmd sAnim_RollerSkatesFaceWest[] = {
+    ANIMCMD_FRAME(6, 16),
+    ANIMCMD_JUMP(0),
+};
+
+static const union AnimCmd sAnim_RollerSkatesFaceEast[] = {
+    ANIMCMD_FRAME(6, 16, .hFlip = TRUE),
+    ANIMCMD_JUMP(0),
+};
+
+static const union AnimCmd sAnim_RollerSkatesGoSouth[] = {
+    ANIMCMD_FRAME(1, 5),
+    ANIMCMD_FRAME(0, 4),
+    ANIMCMD_FRAME(2, 5),
+    ANIMCMD_FRAME(0, 4),
+    ANIMCMD_JUMP(0),
+};
+
+static const union AnimCmd sAnim_RollerSkatesGoNorth[] = {
+    ANIMCMD_FRAME(4, 5),
+    ANIMCMD_FRAME(3, 4),
+    ANIMCMD_FRAME(5, 5),
+    ANIMCMD_FRAME(3, 4),
+    ANIMCMD_JUMP(0),
+};
+
+static const union AnimCmd sAnim_RollerSkatesGoWest[] = {
+    ANIMCMD_FRAME(7, 5),
+    ANIMCMD_FRAME(6, 4),
+    ANIMCMD_FRAME(8, 5),
+    ANIMCMD_FRAME(6, 4),
+    ANIMCMD_JUMP(0),
+};
+
+static const union AnimCmd sAnim_RollerSkatesGoEast[] = {
+    ANIMCMD_FRAME(7, 6, .hFlip = TRUE),
+    ANIMCMD_FRAME(6, 6, .hFlip = TRUE),
+    ANIMCMD_FRAME(8, 6, .hFlip = TRUE),
+    ANIMCMD_FRAME(6, 6, .hFlip = TRUE),
+    ANIMCMD_JUMP(0),
+};
 static const union AnimCmd sAnim_FaceSouth[] = {
     ANIMCMD_FRAME(0, 16),
     ANIMCMD_JUMP(0),
@@ -1481,6 +1534,44 @@ static const union AnimCmd *const sAnimTable_RedGreenNormal[] = {
     [ANIM_SHAKE_HEAD_OR_WALK_IN_PLACE] = sAnim_ShakeHeadOrWalkInPlace,
 };
 
+static const union AnimCmd *const sAnimTable_RollerSkates[] = {
+    [ANIM_STD_FACE_SOUTH] = sAnim_RollerSkatesFaceSouth,
+    [ANIM_STD_FACE_NORTH] = sAnim_RollerSkatesFaceNorth,
+    [ANIM_STD_FACE_WEST] = sAnim_RollerSkatesFaceWest,
+    [ANIM_STD_FACE_EAST] = sAnim_RollerSkatesFaceEast,
+
+    [ANIM_STD_GO_SOUTH] = sAnim_RollerSkatesGoSouth,
+    [ANIM_STD_GO_NORTH] = sAnim_RollerSkatesGoNorth,
+    [ANIM_STD_GO_WEST] = sAnim_RollerSkatesGoWest,
+    [ANIM_STD_GO_EAST] = sAnim_RollerSkatesGoEast,
+
+    [ANIM_STD_GO_FAST_SOUTH] = sAnim_RollerSkatesGoSouth,
+    [ANIM_STD_GO_FAST_NORTH] = sAnim_RollerSkatesGoNorth,
+    [ANIM_STD_GO_FAST_WEST] = sAnim_RollerSkatesGoWest,
+    [ANIM_STD_GO_FAST_EAST] = sAnim_RollerSkatesGoEast,
+
+    [ANIM_STD_GO_FASTER_SOUTH] = sAnim_RollerSkatesGoSouth,
+    [ANIM_STD_GO_FASTER_NORTH] = sAnim_RollerSkatesGoNorth,
+    [ANIM_STD_GO_FASTER_WEST] = sAnim_RollerSkatesGoWest,
+    [ANIM_STD_GO_FASTER_EAST] = sAnim_RollerSkatesGoEast,
+
+    [ANIM_STD_GO_FASTEST_SOUTH] = sAnim_RollerSkatesGoSouth,
+    [ANIM_STD_GO_FASTEST_NORTH] = sAnim_RollerSkatesGoNorth,
+    [ANIM_STD_GO_FASTEST_WEST] = sAnim_RollerSkatesGoWest,
+    [ANIM_STD_GO_FASTEST_EAST] = sAnim_RollerSkatesGoEast,
+
+    [ANIM_RUN_SOUTH] = sAnim_RollerSkatesGoSouth,
+    [ANIM_RUN_NORTH] = sAnim_RollerSkatesGoNorth,
+    [ANIM_RUN_WEST] = sAnim_RollerSkatesGoWest,
+    [ANIM_RUN_EAST] = sAnim_RollerSkatesGoEast,
+
+    [ANIM_SPIN_SOUTH] = sAnim_SpinSouth,
+    [ANIM_SPIN_NORTH] = sAnim_SpinNorth,
+    [ANIM_SPIN_WEST] = sAnim_SpinWest,
+    [ANIM_SPIN_EAST] = sAnim_SpinEast,
+    [ANIM_SHAKE_HEAD_OR_WALK_IN_PLACE] = sAnim_ShakeHeadOrWalkInPlace,
+};
+
 // Leftover from Ruby/Sapphire
 static const union AnimCmd *const sAnimTable_AcroBike[] = {
     [ANIM_STD_FACE_SOUTH] = sAnim_FaceSouth,
@@ -1634,6 +1725,10 @@ static const struct StepAnimTable sStepAnimTables[] = {
     {
         .anims = sAnimTable_RedGreenNormal,
         .animPos = {1, 3, 0, 2},
+    },
+    {
+    .anims = sAnimTable_RollerSkates,
+    .animPos = {1, 3, 0, 2},
     },
     {
         .anims = sAnimTable_AcroBike,

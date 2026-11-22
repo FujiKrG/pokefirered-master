@@ -13064,6 +13064,23 @@ const struct Item gItemsInfo[] =
         .iconPalette = gItemIconPalette_Bicycle,
     },
 
+    [ITEM_SKATE_ROLLER] =
+{
+    .name = ITEM_NAME("Roller Skates"),
+    .price = 0,
+    .description = COMPOUND_STRING(
+        "A pair of skates "
+        "that allow you to\n"
+        "move quickly on land."),
+
+    .importance = 1,
+    .pocket = POCKET_KEY_ITEMS,
+    .type = ITEM_USE_FIELD,
+    .fieldUseFunc = ItemUseOutOfBattle_RollerSkates,
+    .iconPic = gItemIcon_Bicycle,
+    .iconPalette = gItemIconPalette_Bicycle,
+},
+
     [ITEM_MACH_BIKE] =
     {
         .name = ITEM_NAME("Mach Bike"),
