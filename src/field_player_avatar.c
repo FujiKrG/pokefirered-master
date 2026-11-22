@@ -468,8 +468,25 @@ static u8 CheckMovementInputNotOnBike(u8 direction)
     }
 }
 
+static void SetPlayerRollerSkatesGraphicsIfNeeded(bool8 enabled)
+{
+    struct ObjectEvent *playerObjEvent = &gObjectEvents[gPlayerAvatar.objectEventId];
+    u16 graphicsId;
+
+    if (gPlayerAvatar.gender == FEMALE)
+        graphicsId = enabled ? OBJ_EVENT_GFX_GREEN_ROLLER_SKATES : OBJ_EVENT_GFX_GREEN_NORMAL;
+    else
+        graphicsId = enabled ? OBJ_EVENT_GFX_RED_ROLLER_SKATES : OBJ_EVENT_GFX_RED_NORMAL;
+
+    if (playerObjEvent->graphicsId != graphicsId)
+        SetPlayerAvatarRollerSkates(enabled);
+}
+
 static void PlayerNotOnBikeNotMoving(u8 direction, u16 heldKeys)
 {
+    if (FlagGet(FLAG_SYS_ROLLER_SKATES_ACTIVE))
+        SetPlayerRollerSkatesGraphicsIfNeeded(FALSE);
+
     PlayerFaceDirection(GetPlayerFacingDirection());
 }
 
@@ -513,6 +530,14 @@ static void PlayerNotOnBikeMoving(u8 direction, u16 heldKeys)
             PlayerWalkFast(direction);
         }
         return;
+    }
+
+    if (FlagGet(FLAG_SYS_ROLLER_SKATES_ACTIVE))
+    {
+        bool8 running = (heldKeys & B_BUTTON)
+                     && !IsRunningDisallowed(gObjectEvents[gPlayerAvatar.objectEventId].currentMetatileBehavior);
+
+        SetPlayerRollerSkatesGraphicsIfNeeded(!running);
     }
 
     if ((heldKeys & B_BUTTON) && (FlagGet(FLAG_SYS_B_DASH) || FlagGet(FLAG_SYS_ROLLER_SKATES_ACTIVE)) && !IsRunningDisallowed(gObjectEvents[gPlayerAvatar.objectEventId].currentMetatileBehavior))
@@ -747,9 +772,6 @@ static void PlayerAvatarTransition_Normal(struct ObjectEvent * playerObjEvent)
 {
     QuestLogTryRecordPlayerAvatarGfxTransition(QL_PLAYER_GFX_NORMAL);
     QuestLogCallUpdatePlayerSprite(QL_PLAYER_GFX_NORMAL);
-
-    if (FlagGet(FLAG_SYS_ROLLER_SKATES_ACTIVE))
-        SetPlayerAvatarRollerSkates(TRUE);
 }
 
 static void PlayerAvatarTransition_Bike(struct ObjectEvent *playerObjEvent)
