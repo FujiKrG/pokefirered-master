@@ -32,6 +32,11 @@ static EWRAM_DATA struct ObjectEvent *sPlayerObjectPtr = NULL;
 static EWRAM_DATA u8 sTeleportSavedFacingDirection = DIR_NONE;
 EWRAM_DATA struct ObjectEvent gObjectEvents[OBJECT_EVENTS_COUNT] = {};
 EWRAM_DATA struct PlayerAvatar gPlayerAvatar = {};
+static EWRAM_DATA bool8 sRollerSkatesStartHopPending;
+static EWRAM_DATA bool8 sRollerSkatesWasRunning;
+static EWRAM_DATA bool8 sRollerSkatesHopThisStep;
+static EWRAM_DATA u8 sRollerSkatesIdleFrames;
+static EWRAM_DATA u8 sRollerSkatesRunHopCooldown;
 
 static u8 ObjectEventCB2_NoMovement2(struct ObjectEvent *object, struct Sprite *sprite);
 static bool8 TryUpdatePlayerSpinDirection(void);
@@ -60,9 +65,17 @@ static bool8 ForcedMovement_SlideWest(void);
 static bool8 ForcedMovement_SlideEast(void);
 static bool8 ForcedMovement_MatJump(void);
 static bool8 ForcedMovement_MatSpin(void);
+static void Task_RollerSkatesHop(u8 taskId);
+static void StartRollerSkatesHop(void);
 static u8 CheckMovementInputNotOnBike(u8 direction);
 static void PlayerNotOnBikeNotMoving(u8 direction, u16 heldKeys);
 static void PlayerNotOnBikeTurningInPlace(u8 direction, u16 heldKeys);
+
+static bool8 IsWildVegetationBehavior(u8 behavior)
+{
+    return MetatileBehavior_IsTallGrass(behavior);
+}
+
 static void PlayerNotOnBikeMoving(u8 direction, u16 heldKeys);
 static u8 CheckForPlayerAvatarCollision(u8 direction);
 static bool8 CanStopSurfing(s16 x, s16 y, u8 direction);
@@ -105,6 +118,40 @@ static void Task_WaitStopSurfing(u8 taskId);
 static void Task_TeleportWarpOutPlayerAnim(u8 taskId);
 static void Task_TeleportWarpInPlayerAnim(u8 taskId);
 static u8 TeleportAnim_RotatePlayer(struct ObjectEvent *object, s16 *timer);
+
+static void StartRollerSkatesHop(void)
+{
+    if (sRollerSkatesHopThisStep || FuncIsActiveTask(Task_RollerSkatesHop))
+        return;
+
+    sRollerSkatesHopThisStep = TRUE;
+    PlaySE(SE_LEDGE);
+    CreateTask(Task_RollerSkatesHop, 0);
+}
+
+static void Task_RollerSkatesHop(u8 taskId)
+{
+    struct Sprite *sprite = &gSprites[gPlayerAvatar.spriteId];
+
+    switch (gTasks[taskId].data[0])
+    {
+    case 0:
+        sprite->y2 -= 2;
+        break;
+    case 1:
+        sprite->y2 -= 1;
+        break;
+    case 2:
+        sprite->y2 += 1;
+        break;
+    case 3:
+        sprite->y2 += 2;
+        DestroyTask(taskId);
+        return;
+    }
+
+    gTasks[taskId].data[0]++;
+}
 
 void MovementType_Player(struct Sprite *sprite)
 {
@@ -449,6 +496,13 @@ void MovePlayerNotOnBike(u8 direction, u16 heldKeys)
     sPlayerNotOnBikeFuncs[CheckMovementInputNotOnBike(direction)](direction, heldKeys);
 }
 
+void RollerSkatesRunHopOnPlayerStep(void)
+{
+    sRollerSkatesHopThisStep = FALSE;
+    if (sRollerSkatesRunHopCooldown > 0)
+        sRollerSkatesRunHopCooldown--;
+}
+
 static u8 CheckMovementInputNotOnBike(u8 direction)
 {
     if (direction == DIR_NONE)
@@ -484,6 +538,13 @@ static void SetPlayerRollerSkatesGraphicsIfNeeded(bool8 enabled)
 
 static void PlayerNotOnBikeNotMoving(u8 direction, u16 heldKeys)
 {
+    sRollerSkatesWasRunning = FALSE;
+    if (sRollerSkatesIdleFrames < 8)
+        sRollerSkatesIdleFrames++;
+
+    if (sRollerSkatesIdleFrames >= 8)
+        sRollerSkatesStartHopPending = TRUE;
+
     if (FlagGet(FLAG_SYS_ROLLER_SKATES_ACTIVE))
         SetPlayerRollerSkatesGraphicsIfNeeded(FALSE);
 
@@ -492,6 +553,8 @@ static void PlayerNotOnBikeNotMoving(u8 direction, u16 heldKeys)
 
 static void PlayerNotOnBikeTurningInPlace(u8 direction, u16 heldKeys)
 {
+    sRollerSkatesWasRunning = FALSE;
+    sRollerSkatesIdleFrames = 0;
     PlayerTurnInPlace(direction);
 }
 
@@ -531,13 +594,55 @@ static void PlayerNotOnBikeMoving(u8 direction, u16 heldKeys)
         }
         return;
     }
+    s16 destX, destY;
+    u8 destMetatileBehavior;
+    bool8 onWildVegetation;
 
+    PlayerGetDestCoords(&destX, &destY);
+    MoveCoords(direction, &destX, &destY);
+
+    destMetatileBehavior = MapGridGetMetatileBehaviorAt(destX, destY);
+    onWildVegetation = IsWildVegetationBehavior(destMetatileBehavior);
+
+    if (FlagGet(FLAG_SYS_ROLLER_SKATES_ACTIVE) && !(heldKeys & B_BUTTON) && onWildVegetation && !IsWildVegetationBehavior(gObjectEvents[gPlayerAvatar.objectEventId].currentMetatileBehavior))
+    {
+        StartRollerSkatesHop();
+    }
+
+    if (sRollerSkatesStartHopPending && !(heldKeys & B_BUTTON))
+    {
+        bool8 running = (heldKeys & B_BUTTON) && !IsRunningDisallowed(gObjectEvents[gPlayerAvatar.objectEventId].currentMetatileBehavior);
+
+        bool8 onRockStairs = ObjectMovingOnRockStairs(&gObjectEvents[gPlayerAvatar.objectEventId], direction);
+        bool8 creeping = FlagGet(DN_FLAG_SEARCHING) && (heldKeys & A_BUTTON);
+
+        sRollerSkatesStartHopPending = FALSE;
+        sRollerSkatesIdleFrames = 0;
+
+        if (FlagGet(FLAG_SYS_ROLLER_SKATES_ACTIVE) && !running && !onWildVegetation && !onRockStairs && !creeping)
+        {
+            StartRollerSkatesHop();
+        }
+    }
+
+    sRollerSkatesIdleFrames = 0;
+    
     if (FlagGet(FLAG_SYS_ROLLER_SKATES_ACTIVE))
     {
-        bool8 running = (heldKeys & B_BUTTON)
-                     && !IsRunningDisallowed(gObjectEvents[gPlayerAvatar.objectEventId].currentMetatileBehavior);
+        bool8 running = (heldKeys & B_BUTTON) && !IsRunningDisallowed(gObjectEvents[gPlayerAvatar.objectEventId].currentMetatileBehavior);
 
-        SetPlayerRollerSkatesGraphicsIfNeeded(!running);
+        if (running && sRollerSkatesWasRunning && !onWildVegetation && sRollerSkatesRunHopCooldown == 0)
+        {
+            StartRollerSkatesHop();
+            sRollerSkatesRunHopCooldown = 6;
+        }
+        sRollerSkatesWasRunning = !running && !onWildVegetation;
+
+        SetPlayerRollerSkatesGraphicsIfNeeded(!running && !onWildVegetation);
+    }
+    else
+    {
+        sRollerSkatesWasRunning = FALSE;
     }
 
     if ((heldKeys & B_BUTTON) && (FlagGet(FLAG_SYS_B_DASH) || FlagGet(FLAG_SYS_ROLLER_SKATES_ACTIVE)) && !IsRunningDisallowed(gObjectEvents[gPlayerAvatar.objectEventId].currentMetatileBehavior))
@@ -560,7 +665,7 @@ static void PlayerNotOnBikeMoving(u8 direction, u16 heldKeys)
         {
             PlayerWalkSlow(direction);
         }
-        else if (FlagGet(FLAG_SYS_ROLLER_SKATES_ACTIVE))
+        else if (FlagGet(FLAG_SYS_ROLLER_SKATES_ACTIVE) && !onWildVegetation)
         {
             PlayerWalkRollerSkates(direction);
         }
@@ -768,7 +873,7 @@ static void PlayerAvatarTransition_Dummy(struct ObjectEvent *playerObjEvent)
 {
 }
 
-static void PlayerAvatarTransition_Normal(struct ObjectEvent * playerObjEvent)
+static void PlayerAvatarTransition_Normal(struct ObjectEvent *playerObjEvent)
 {
     QuestLogTryRecordPlayerAvatarGfxTransition(QL_PLAYER_GFX_NORMAL);
     QuestLogCallUpdatePlayerSprite(QL_PLAYER_GFX_NORMAL);
@@ -958,6 +1063,8 @@ void PlayerTurnInPlace(u8 direction)
 
 void PlayerJumpLedge(u8 direction)
 {
+    if (FlagGet(FLAG_SYS_ROLLER_SKATES_ACTIVE))
+        sRollerSkatesHopThisStep = TRUE;
     PlaySE(SE_LEDGE);
     PlayerSetAnimId(GetJump2MovementAction(direction), COPY_MOVE_JUMP2);
 }

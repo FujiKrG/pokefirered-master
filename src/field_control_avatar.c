@@ -42,34 +42,34 @@
 
 static void QuestLogOverrideJoyVars(struct FieldInput *input, u16 *newKeys, u16 *heldKeys);
 static void Task_QuestLogPlayback_OpenStartMenu(u8 taskId);
-static void GetPlayerPosition(struct MapPosition * position);
+static void GetPlayerPosition(struct MapPosition *position);
 static u16 GetPlayerCurMetatileBehavior(void);
-static bool8 TryStartInteractionScript(struct MapPosition * position, u16 metatileBehavior, u8 playerDirection);
-static const u8 *GetInteractionScript(struct MapPosition * position, u8 metatileBehavior, u8 playerDirection);
-static const u8 *GetInteractedObjectEventScript(struct MapPosition * position, u8 metatileBehavior, u8 playerDirection);
-static const u8 *GetInteractedBackgroundEventScript(struct MapPosition * position, u8 metatileBehavior, u8 playerDirection);
+static bool8 TryStartInteractionScript(struct MapPosition *position, u16 metatileBehavior, u8 playerDirection);
+static const u8 *GetInteractionScript(struct MapPosition *position, u8 metatileBehavior, u8 playerDirection);
+static const u8 *GetInteractedObjectEventScript(struct MapPosition *position, u8 metatileBehavior, u8 playerDirection);
+static const u8 *GetInteractedBackgroundEventScript(struct MapPosition *position, u8 metatileBehavior, u8 playerDirection);
 static const struct BgEvent *GetBackgroundEventAtPosition(struct MapHeader *, u16, u16, u8);
-static const u8 *GetInteractedMetatileScript(struct MapPosition * position, u8 metatileBehavior, u8 playerDirection);
-static const u8 *GetInteractedWaterScript(struct MapPosition * position, u8 metatileBehavior, u8 playerDirection);
-static bool8 TryStartStepBasedScript(struct MapPosition * position, u16 metatileBehavior, u16 playerDirection);
-static bool8 TryStartCoordEventScript(struct MapPosition * position);
+static const u8 *GetInteractedMetatileScript(struct MapPosition *position, u8 metatileBehavior, u8 playerDirection);
+static const u8 *GetInteractedWaterScript(struct MapPosition *position, u8 metatileBehavior, u8 playerDirection);
+static bool8 TryStartStepBasedScript(struct MapPosition *position, u16 metatileBehavior, u16 playerDirection);
+static bool8 TryStartCoordEventScript(struct MapPosition *position);
 static bool8 TryStartMiscWalkingScripts(u16 metatileBehavior);
 static bool8 TryStartStepCountScript(u16 metatileBehavior);
 static void UpdateHappinessStepCounter(void);
 static bool8 CheckStandardWildEncounter(u32 metatileAttributes);
-static bool8 TrySetUpWalkIntoSignpostScript(struct MapPosition * position, u16 metatileBehavior, u8 playerDirection);
+static bool8 TrySetUpWalkIntoSignpostScript(struct MapPosition *position, u16 metatileBehavior, u8 playerDirection);
 static void SetUpWalkIntoSignScript(const u8 *script, u8 playerDirection);
 static u8 GetFacingSignpostType(u16 metatileBehvaior, u8 direction);
-static const u8 *GetSignpostScriptAtMapPosition(struct MapPosition * position);
-static bool8 TryArrowWarp(struct MapPosition * position, u16 metatileBehavior, u8 playerDirection);
-static bool8 TryStartWarpEventScript(struct MapPosition * position, u16 metatileBehavior);
+static const u8 *GetSignpostScriptAtMapPosition(struct MapPosition *position);
+static bool8 TryArrowWarp(struct MapPosition *position, u16 metatileBehavior, u8 playerDirection);
+static bool8 TryStartWarpEventScript(struct MapPosition *position, u16 metatileBehavior);
 static bool8 IsWarpMetatileBehavior(u16 metatileBehavior);
-static void SetupWarp(struct MapHeader * mapHeader, s8 warpId, struct MapPosition * position);
+static void SetupWarp(struct MapHeader *mapHeader, s8 warpId, struct MapPosition *position);
 static bool8 IsArrowWarpMetatileBehavior(u16 metatileBehavior, u8 playerDirection);
-static s8 GetWarpEventAtMapPosition(struct MapHeader * mapHeader, struct MapPosition * mapPosition);
-static bool8 TryDoorWarp(struct MapPosition * position, u16 metatileBehavior, u8 playerDirection);
-static s8 GetWarpEventAtPosition(struct MapHeader * mapHeader, u16 x, u16 y, u8 z);
-static const u8 *GetCoordEventScriptAtPosition(struct MapHeader * mapHeader, u16 x, u16 y, u8 z);
+static s8 GetWarpEventAtMapPosition(struct MapHeader *mapHeader, struct MapPosition *mapPosition);
+static bool8 TryDoorWarp(struct MapPosition *position, u16 metatileBehavior, u8 playerDirection);
+static s8 GetWarpEventAtPosition(struct MapHeader *mapHeader, u16 x, u16 y, u8 z);
+static const u8 *GetCoordEventScriptAtPosition(struct MapHeader *mapHeader, u16 x, u16 y, u8 z);
 static void UpdateFollowerStepCounter(void);
 #if OW_POISON_DAMAGE < GEN_5
 static bool8 UpdatePoisonStepCounter(void);
@@ -135,7 +135,6 @@ void FieldGetPlayerInput(struct FieldInput *input, u16 newKeys, u16 heldKeys)
                 input->heldDirection2 = TRUE;
             }
         }
-
     }
 
     if (forcedMove == FALSE)
@@ -157,7 +156,7 @@ void FieldGetPlayerInput(struct FieldInput *input, u16 newKeys, u16 heldKeys)
         else if (heldKeys & DPAD_RIGHT)
             input->dpadDirection = DIR_EAST;
 
-        if(DEBUG_OVERWORLD_MENU && !DEBUG_OVERWORLD_IN_MENU)
+        if (DEBUG_OVERWORLD_MENU && !DEBUG_OVERWORLD_IN_MENU)
         {
             if ((heldKeys & DEBUG_OVERWORLD_HELD_KEYS) && input->DEBUG_OVERWORLD_TRIGGER_EVENT)
             {
@@ -166,7 +165,6 @@ void FieldGetPlayerInput(struct FieldInput *input, u16 newKeys, u16 heldKeys)
             }
         }
     }
-
 }
 
 static void QuestLogOverrideJoyVars(struct FieldInput *input, u16 *newKeys, u16 *heldKeys)
@@ -228,6 +226,7 @@ int ProcessPlayerFieldInput(struct FieldInput *input)
 
     if (input->tookStep)
     {
+        RollerSkatesRunHopOnPlayerStep();
         IncrementGameStat(GAME_STAT_STEPS);
         WonderNews_IncrementStepCounter();
         IncrementRenewableHiddenItemStepCounter();
@@ -303,7 +302,7 @@ int ProcessPlayerFieldInput(struct FieldInput *input)
         ShowStartMenu();
         return TRUE;
     }
-    
+
     if (input->tookStep && TryFindHiddenPokemon())
         return TRUE;
 
@@ -312,11 +311,11 @@ int ProcessPlayerFieldInput(struct FieldInput *input)
         gFieldInputRecord.pressedSelectButton = TRUE;
         return TRUE;
     }
-    
+
     if (input->pressedRButton && TryStartDexNavSearch())
         return TRUE;
 
-    if(input->input_field_1_2 && DEBUG_OVERWORLD_MENU && !DEBUG_OVERWORLD_IN_MENU)
+    if (input->input_field_1_2 && DEBUG_OVERWORLD_MENU && !DEBUG_OVERWORLD_IN_MENU)
     {
         PlaySE(SE_WIN_OPEN);
         FreezeObjectEvents();
@@ -327,7 +326,7 @@ int ProcessPlayerFieldInput(struct FieldInput *input)
     return FALSE;
 }
 
-void FieldInput_HandleCancelSignpost(struct FieldInput * input)
+void FieldInput_HandleCancelSignpost(struct FieldInput *input)
 {
     if (ScriptContext_IsEnabled() == TRUE)
     {
@@ -404,10 +403,7 @@ static bool8 TryStartInteractionScript(struct MapPosition *position, u16 metatil
         return FALSE;
 
     // Don't play interaction sound for certain scripts.
-    if (script != PalletTown_PlayersHouse_2F_EventScript_PC
-        && script != EventScript_PC
-        && script != EventScript_UseSurf
-        && script != EventScript_CurrentTooFast)
+    if (script != PalletTown_PlayersHouse_2F_EventScript_PC && script != EventScript_PC && script != EventScript_UseSurf && script != EventScript_CurrentTooFast)
         PlaySE(SE_SELECT);
 
     ScriptContext_SetupScript(script);
@@ -725,13 +721,13 @@ static bool8 TryStartStepCountScript(u16 metatileBehavior)
             ScriptContext_SetupScript(EventScript_VsSeekerChargingDone);
             return TRUE;
         }
-    #if OW_POISON_DAMAGE < GEN_5
+#if OW_POISON_DAMAGE < GEN_5
         if (UpdatePoisonStepCounter() == TRUE)
         {
             ScriptContext_SetupScript(EventScript_FieldPoison);
             return TRUE;
         }
-    #endif
+#endif
         if (ShouldEggHatch())
         {
             IncrementGameStat(GAME_STAT_HATCHED_EGGS);
@@ -813,10 +809,10 @@ static bool8 CheckStandardWildEncounter(u32 metatileAttributes)
     return TryStandardWildEncounter(metatileAttributes);
 }
 
-static bool8 TrySetUpWalkIntoSignpostScript(struct MapPosition * position, u16 metatileBehavior, u8 playerDirection)
+static bool8 TrySetUpWalkIntoSignpostScript(struct MapPosition *position, u16 metatileBehavior, u8 playerDirection)
 {
     u8 signpostType;
-    const u8 * script;
+    const u8 *script;
     if (JOY_HELD(DPAD_LEFT | DPAD_RIGHT))
         return FALSE;
     if (playerDirection == DIR_EAST || playerDirection == DIR_WEST)
@@ -883,9 +879,9 @@ static void SetUpWalkIntoSignScript(const u8 *script, u8 playerDirection)
     MsgSetSignpost();
 }
 
-static const u8 *GetSignpostScriptAtMapPosition(struct MapPosition * position)
+static const u8 *GetSignpostScriptAtMapPosition(struct MapPosition *position)
 {
-    const struct BgEvent * event = GetBackgroundEventAtPosition(&gMapHeader, position->x - MAP_OFFSET, position->y - MAP_OFFSET, position->elevation);
+    const struct BgEvent *event = GetBackgroundEventAtPosition(&gMapHeader, position->x - MAP_OFFSET, position->y - MAP_OFFSET, position->elevation);
     if (event == NULL)
         return NULL;
     if (event->bgUnion.script != NULL)
@@ -1134,7 +1130,7 @@ static const u8 *GetCoordEventScriptAtPosition(struct MapHeader *mapHeader, u16 
     return NULL;
 }
 
-void HandleBoulderFallThroughHole(struct ObjectEvent * object)
+void HandleBoulderFallThroughHole(struct ObjectEvent *object)
 {
     if (MapGridGetMetatileBehaviorAt(object->currentCoords.x, object->currentCoords.y) == MB_FALL_WARP)
     {
@@ -1147,7 +1143,7 @@ void HandleBoulderFallThroughHole(struct ObjectEvent * object)
 void HandleBoulderActivateVictoryRoadSwitch(u16 x, u16 y)
 {
     int i;
-    const struct CoordEvent * events = gMapHeader.events->coordEvents;
+    const struct CoordEvent *events = gMapHeader.events->coordEvents;
     int n = gMapHeader.events->coordEventCount;
 
     if (MapGridGetMetatileBehaviorAt(x, y) == MB_STRENGTH_BUTTON)
@@ -1225,9 +1221,9 @@ int SetCableClubWarp(void)
 {
     struct MapPosition position;
 
-    GetPlayerMovementDirection();  // unnecessary
+    GetPlayerMovementDirection(); // unnecessary
     GetPlayerPosition(&position);
-    MapGridGetMetatileBehaviorAt(position.x, position.y);  // unnecessary
+    MapGridGetMetatileBehaviorAt(position.x, position.y); // unnecessary
     SetupWarp(&gMapHeader, GetWarpEventAtMapPosition(&gMapHeader, &position), &position);
     return 0;
 }
