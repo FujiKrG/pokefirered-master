@@ -402,7 +402,13 @@ static bool8 TryStartInteractionScript(struct MapPosition *position, u16 metatil
     if (script == NULL)
         return FALSE;
 
-    // Don't play interaction sound for certain scripts.
+    
+    if (FlagGet(FLAG_SYS_ROLLER_SKATES_ACTIVE))
+    {
+        SetPlayerAvatarRollerSkates(FALSE);
+        ObjectEventForceSetHeldMovement(&gObjectEvents[gPlayerAvatar.objectEventId], GetFaceDirectionMovementAction(direction));
+    }
+// Don't play interaction sound for certain scripts.
     if (script != PalletTown_PlayersHouse_2F_EventScript_PC && script != EventScript_PC && script != EventScript_UseSurf && script != EventScript_CurrentTooFast)
         PlaySE(SE_SELECT);
 
@@ -874,6 +880,11 @@ static u8 GetFacingSignpostType(u16 metatileBehavior, u8 playerDirection)
 static void SetUpWalkIntoSignScript(const u8 *script, u8 playerDirection)
 {
     gSpecialVar_Facing = playerDirection;
+    if (FlagGet(FLAG_SYS_ROLLER_SKATES_ACTIVE))
+    {
+        SetPlayerAvatarRollerSkates(FALSE);
+        ObjectEventForceSetHeldMovement(&gObjectEvents[gPlayerAvatar.objectEventId], GetFaceDirectionMovementAction(playerDirection));
+    }
     ScriptContext_SetupScript(script);
     SetWalkingIntoSignVars();
     MsgSetSignpost();
