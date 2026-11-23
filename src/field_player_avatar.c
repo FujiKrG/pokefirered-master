@@ -66,6 +66,7 @@ static bool8 ForcedMovement_SlideEast(void);
 static bool8 ForcedMovement_MatJump(void);
 static bool8 ForcedMovement_MatSpin(void);
 static void Task_RollerSkatesHop(u8 taskId);
+static void Task_RollerSkatesSoundCooldown(u8 taskId);
 static void StartRollerSkatesHop(void);
 static u8 CheckMovementInputNotOnBike(u8 direction);
 static void PlayerNotOnBikeNotMoving(u8 direction, u16 heldKeys);
@@ -121,11 +122,20 @@ static u8 TeleportAnim_RotatePlayer(struct ObjectEvent *object, s16 *timer);
 
 static void StartRollerSkatesHop(void)
 {
+    u8 soundTaskId;
+
     if (sRollerSkatesHopThisStep || FuncIsActiveTask(Task_RollerSkatesHop))
         return;
 
     sRollerSkatesHopThisStep = TRUE;
-    PlaySE(SE_LEDGE);
+    if (!FuncIsActiveTask(Task_RollerSkatesSoundCooldown))
+    {
+        PlaySE(SE_LEDGE);
+        soundTaskId = CreateTask(Task_RollerSkatesSoundCooldown, 0);
+        if (gTasks[soundTaskId].isActive && gTasks[soundTaskId].func == Task_RollerSkatesSoundCooldown)
+            gTasks[soundTaskId].data[0] = 60;
+    }
+
     CreateTask(Task_RollerSkatesHop, 0);
 }
 
@@ -153,6 +163,12 @@ static void Task_RollerSkatesHop(u8 taskId)
     gTasks[taskId].data[0]++;
 }
 
+
+static void Task_RollerSkatesSoundCooldown(u8 taskId)
+{
+    if (--gTasks[taskId].data[0] <= 0)
+        DestroyTask(taskId);
+}
 void MovementType_Player(struct Sprite *sprite)
 {
     UpdateObjectEventCurrentMovement(&gObjectEvents[sprite->data[0]], sprite, (bool8 (*)(struct ObjectEvent *, struct Sprite *))ObjectEventCB2_NoMovement2);
