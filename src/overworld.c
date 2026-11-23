@@ -114,6 +114,8 @@ static EWRAM_DATA s16 sCreditsOverworld_CmdIndex = 0;
 
 EWRAM_DATA struct LinkPlayerObjectEvent gLinkPlayerObjectEvents[4] = {};
 
+bool8 gViewSpeedDebug = FALSE;
+
 COMMON_DATA u16 *gBGTilemapBuffers1 = NULL;
 COMMON_DATA u16 *gBGTilemapBuffers2 = NULL;
 COMMON_DATA u16 *gBGTilemapBuffers3 = NULL;
@@ -1600,6 +1602,39 @@ u8 UpdateSpritePaletteWithTime(u8 paletteNum)
     return paletteNum;
 }
 
+static const u8 sSpeedDebugNames[][10] = {
+    _("NORMAL"),
+    _("FAST_1"),
+    _("FAST_1_5"),
+    _("FAST_2"),
+    _("FASTER"),
+    _("FASTEST"),
+};
+
+static const u8 sSpeedDebugPrefix[] = _("SPEED: "); // <--- CONSTANTE ADICIONADA
+
+static void DrawSpeedDebugOverlay(void)
+{
+    u8 textBuffer[40];
+    u8 currentSpeed;
+
+    if (!gViewSpeedDebug)
+        return;
+
+    currentSpeed = gSprites[gPlayerAvatar.spriteId].data[4];
+
+    if (currentSpeed > MOVE_SPEED_FASTEST)
+        currentSpeed = MOVE_SPEED_NORMAL;
+
+    StringCopy(textBuffer, sSpeedDebugPrefix); // <--- AGORA USA A CONSTANTE
+    StringAppend(textBuffer, sSpeedDebugNames[currentSpeed]);
+
+    FillWindowPixelBuffer(0, PIXEL_FILL(0));
+    AddTextPrinterParameterized(0, FONT_SMALL, textBuffer, 2, 2, 0, NULL);
+    PutWindowTilemap(0);
+    CopyWindowToVram(0, COPYWIN_FULL);
+}
+
 static void OverworldBasic(void)
 {
     ScriptContext_RunScript();
@@ -1612,6 +1647,7 @@ static void OverworldBasic(void)
     UpdatePaletteFade();
     UpdateTilesetAnimations();
     DoScheduledBgTilemapCopiesToVram();
+    DrawSpeedDebugOverlay();
     // Every minute if no palette fade is active, update TOD blending as needed
     if (!gPaletteFade.active && --gTimeUpdateCounter <= 0)
     {

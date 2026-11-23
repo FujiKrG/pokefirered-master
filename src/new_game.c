@@ -132,6 +132,7 @@ void NewGameInitData(void)
     PlayTimeCounter_Reset();
     ClearPokedexFlags();
     InitEventData();
+    FlagSet(FLAG_SYS_B_DASH);
     InitTimeBasedEvents(); // remove if wallclock
     ResetFameChecker();
     SetMoney(&gSaveBlock1Ptr->money, 3000);
@@ -147,6 +148,7 @@ void NewGameInitData(void)
     gSaveBlock1Ptr->registeredItem = 0;
     ClearBag();
     AddBagItem(ITEM_SKATE_ROLLER, 1);
+    AddBagItem(ITEM_BICYCLE, 1);
     NewGameInitPCItems();
     // ClearEnigmaBerries();
     InitEasyChatPhrases();

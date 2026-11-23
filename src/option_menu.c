@@ -9,6 +9,7 @@
 #include "text_window.h"
 #include "strings.h"
 #include "field_fadetransition.h"
+#include "field_player_avatar.h"
 #include "gba/m4a_internal.h"
 
 // Menu items
@@ -20,6 +21,7 @@ enum
     MENUITEM_SOUND,
     MENUITEM_BUTTONMODE,
     MENUITEM_FRAMETYPE,
+    MENUITEM_VIEW_SPEED_DEBUG,
     MENUITEM_CANCEL,
     MENUITEM_COUNT
 };
@@ -128,7 +130,7 @@ static const struct BgTemplate sOptionMenuBgTemplates[] =
 };
 
 static const u16 sOptionMenuPalette[] = INCBIN_U16("graphics/misc/option_menu.gbapal");
-static const u16 sOptionMenuItemCounts[MENUITEM_COUNT] = {3, 2, 2, 2, 3, 10, 0};
+static const u16 sOptionMenuItemCounts[MENUITEM_COUNT] = {3, 2, 2, 2, 3, 10, 2, 0};
 
 static const u8 *const sOptionMenuItemsNames[MENUITEM_COUNT] =
 {
@@ -138,6 +140,7 @@ static const u8 *const sOptionMenuItemsNames[MENUITEM_COUNT] =
     [MENUITEM_SOUND]       = gText_Sound,
     [MENUITEM_BUTTONMODE]  = gText_ButtonMode,
     [MENUITEM_FRAMETYPE]   = gText_Frame,
+    [MENUITEM_VIEW_SPEED_DEBUG] = gText_ViewSpeedDebug,
     [MENUITEM_CANCEL]      = gText_OptionMenuCancel,
 };
 
@@ -209,6 +212,7 @@ void CB2_InitOptionMenu(void)
     sOptionMenuPtr->option[MENUITEM_SOUND] = gSaveBlock2Ptr->optionsSound;
     sOptionMenuPtr->option[MENUITEM_BUTTONMODE] = gSaveBlock2Ptr->optionsButtonMode;
     sOptionMenuPtr->option[MENUITEM_FRAMETYPE] = gSaveBlock2Ptr->optionsWindowFrameType;
+    sOptionMenuPtr->option[MENUITEM_VIEW_SPEED_DEBUG] = gViewSpeedDebug;
     
     for (i = 0; i < MENUITEM_COUNT - 1; i++)
     {
@@ -495,6 +499,9 @@ static void BufferOptionMenuString(u8 selection)
         StringAppendN(str, buf, 3);
         AddTextPrinterParameterized3(1, FONT_NORMAL, x, y, dst, -1, str);
         break;
+    case MENUITEM_VIEW_SPEED_DEBUG: // <--- ADICIONE ESTE CASE
+        AddTextPrinterParameterized3(1, FONT_NORMAL, x, y, dst, -1, sOptionMenuPtr->option[selection] ? gText_On : gText_Off);
+        break;
     default:
         break;
     }
@@ -513,6 +520,7 @@ static void CloseAndSaveOptionMenu(u8 taskId)
     gSaveBlock2Ptr->optionsSound = sOptionMenuPtr->option[MENUITEM_SOUND];
     gSaveBlock2Ptr->optionsButtonMode = sOptionMenuPtr->option[MENUITEM_BUTTONMODE];
     gSaveBlock2Ptr->optionsWindowFrameType = sOptionMenuPtr->option[MENUITEM_FRAMETYPE];
+    gViewSpeedDebug = sOptionMenuPtr->option[MENUITEM_VIEW_SPEED_DEBUG];
     SetPokemonCryStereo(gSaveBlock2Ptr->optionsSound);
     FREE_AND_SET_NULL(sOptionMenuPtr);
     DestroyTask(taskId);
@@ -570,3 +578,4 @@ static void UpdateSettingSelectionDisplay(u16 selection)
     SetGpuReg(REG_OFFSET_WIN0V, WIN_RANGE(y, y + maxLetterHeight));
     SetGpuReg(REG_OFFSET_WIN0H, WIN_RANGE(0x10, 0xE0));
 }
+

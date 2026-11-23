@@ -181,16 +181,6 @@ static const struct SpriteFrameImage sPicTable_PechaBerryTree[];
 
 enum
 {
-    MOVE_SPEED_NORMAL,   // walking
-    MOVE_SPEED_FAST_1,   // running / surfing / sliding (ice tile)
-    MOVE_SPEED_FAST_1_5, // water current / bicycle
-    MOVE_SPEED_FAST_2,   // water current / bicycle
-    MOVE_SPEED_FASTER,   // going down cycling road on bicycle
-    MOVE_SPEED_FASTEST,
-};
-
-enum
-{
     JUMP_DISTANCE_IN_PLACE,
     JUMP_DISTANCE_NORMAL,
     JUMP_DISTANCE_FAR,

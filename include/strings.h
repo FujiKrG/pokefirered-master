@@ -1647,5 +1647,8 @@ extern const u8 gText_DexSortSmallestDescription[];
 extern const u8 gText_DexEmptyString[];
 extern const u8 gText_DexSearchDontSpecify[];
 extern const u8 gText_DexSearchTypeNone[];
+extern const u8 gText_ViewSpeedDebug[];
+extern const u8 gText_On[];
+extern const u8 gText_Off[];
 
 #endif //GUARD_STRINGS_H

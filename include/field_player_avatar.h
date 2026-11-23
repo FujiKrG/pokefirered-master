@@ -3,6 +3,18 @@
 
 #include "global.h"
 
+enum MoveSpeed
+{
+    MOVE_SPEED_NORMAL,
+    MOVE_SPEED_FAST_1,
+    MOVE_SPEED_FAST_1_5,
+    MOVE_SPEED_FAST_2,
+    MOVE_SPEED_FASTER,
+    MOVE_SPEED_FASTEST,
+};
+
+extern bool8 gViewSpeedDebug;
+
 void ClearPlayerAvatarInfo(void);
 void SetPlayerAvatarExtraStateTransition(u16 graphicsId, u8 extras);
 u8 GetPlayerAvatarGenderByGraphicsId(u16 graphicsId);
