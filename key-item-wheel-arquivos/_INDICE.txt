@@ -1,0 +1,56 @@
+﻿ARQUIVOS COPIADOS - KEY ITEM WHEEL
+Origem: C:\Users\Emmanuel\Desktop\teste
+
+[1] Feature (diff 95aa41f0d..HEAD) - 25 arquivos
+  .gitignore
+  README.md
+  data/event_scripts.s
+  data/maps/Route113/scripts.inc
+  graphics/bag/key_item_box.png
+  graphics/bag/select_button.png
+  graphics/bag/select_button_down.png
+  graphics/bag/select_button_left.png
+  graphics/bag/select_button_right.png
+  include/constants/global.h
+  include/global.h
+  include/item_icon.h
+  include/item_menu.h
+  include/menu.h
+  include/sprite.h
+  include/strings.h
+  remote_build.sh
+  src/field_weather_effect.c
+  src/item.c
+  src/item_icon.c
+  src/item_menu.c
+  src/menu.c
+  src/new_game.c
+  src/sprite.c
+  src/strings.c
+
+[2] Consumidores/dependencias indiretas - 9 arquivos
+  src/battle_setup.c
+  src/pokenav_match_call_list.c
+  src/item_use.c
+  src/field_control_avatar.c
+  src/main.c
+  include/constants/flags.h
+  include/constants/characters.h
+  include/gba/io_reg.h
+  charmap.txt
+
+[3] Assets gerados (.4bpp/.gbapal) - 6 arquivos
+  graphics/bag/key_item_box.4bpp
+  graphics/bag/key_item_box.gbapal
+  graphics/bag/select_button.4bpp
+  graphics/bag/select_button_down.4bpp
+  graphics/bag/select_button_left.4bpp
+  graphics/bag/select_button_right.4bpp
+
+[4] Alteracoes locais (build + itens iniciais) - 4 arquivos
+  Makefile
+  map_data_rules.mk
+  src/field_player_avatar.c
+  fix-all.ps1
+
+TOTAL UNICO: 44
