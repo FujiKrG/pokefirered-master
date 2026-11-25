@@ -145,10 +145,15 @@ void NewGameInitData(void)
     ZeroPlayerPartyMons();
     ResetPokemonStorageSystem();
     DeactivateAllRoamers();
-    gSaveBlock1Ptr->registeredItem = 0;
+    gSaveBlock1Ptr->registeredItem = ITEM_NONE;
+    for (u32 i = 0; i < ARRAY_COUNT(gSaveBlock1Ptr->registeredItems); i++)
+        gSaveBlock1Ptr->registeredItems[i] = ITEM_NONE;
     ClearBag();
     AddBagItem(ITEM_SKATE_ROLLER, 1);
     AddBagItem(ITEM_BICYCLE, 1);
+    AddBagItem(ITEM_OLD_ROD, 1);
+    AddBagItem(ITEM_DOWSING_MACHINE, 1);
+    AddBagItem(ITEM_TOWN_MAP, 1);
     NewGameInitPCItems();
     // ClearEnigmaBerries();
     InitEasyChatPhrases();

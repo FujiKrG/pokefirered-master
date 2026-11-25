@@ -867,6 +867,7 @@ struct SaveBlock1
     /*0x0638*/ u16 trainerRematchStepCounter;
     /*0x063A*/ u8 trainerRematches[MAX_REMATCH_ENTRIES];
 #endif //FREE_MATCH_CALL
+    /*0x0696*/ u16 registeredItems[4]; // Key Item Wheel
     /*0x06A0*/ struct ObjectEvent objectEvents[OBJECT_EVENTS_COUNT];
     /*0x08E0*/ struct ObjectEventTemplate objectEventTemplates[OBJECT_EVENT_TEMPLATES_COUNT];
     /*0x0EE0*/ u8 ALIGNED(2) flags[NUM_FLAG_BYTES];

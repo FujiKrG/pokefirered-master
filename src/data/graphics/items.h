@@ -1807,6 +1807,9 @@ const u16 gItemIconPalette_DynamaxBand[] = INCBIN_U16("graphics/items/icon_palet
 
 // Misc. Key Items
 
+const u32 gItemIcon_SkatesRoller[] = INCBIN_U32("graphics/items/icons/skates_roller.4bpp.lz");
+const u16 gItemIconPalette_SkatesRoller[] = INCBIN_U16("graphics/items/icon_palettes/skates_roller.gbapal");
+
 const u32 gItemIcon_Bicycle[] = INCBIN_U32("graphics/items/icons/bicycle.4bpp.lz");
 const u16 gItemIconPalette_Bicycle[] = INCBIN_U16("graphics/items/icon_palettes/bicycle.gbapal");
 
