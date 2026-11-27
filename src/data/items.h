@@ -13077,8 +13077,8 @@ const struct Item gItemsInfo[] =
     .pocket = POCKET_KEY_ITEMS,
     .type = ITEM_USE_FIELD,
     .fieldUseFunc = ItemUseOutOfBattle_RollerSkates,
-    .iconPic = gItemIcon_Bicycle,
-    .iconPalette = gItemIconPalette_Bicycle,
+    .iconPic = gItemIcon_RollerSkates,
+    .iconPalette = gItemIconPalette_RollerSkates,
 },
 
     [ITEM_MACH_BIKE] =

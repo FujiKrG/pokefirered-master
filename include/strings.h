@@ -1561,6 +1561,8 @@ extern const u8 gText_NextFusionMon[];
 // Exp. Share
 extern const u8 gText_ExpShareOn[];
 extern const u8 gText_ExpShareOff[];
+extern const u8 gText_RollerSkatesOn[];
+extern const u8 gText_RollerSkatesOff[];
 
 // stats
 extern const u8 gText_Attack[];

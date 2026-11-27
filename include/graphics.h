@@ -4035,8 +4035,8 @@ extern const u16 gItemIconPalette_DynamaxBand[];
 extern const u32 gBattleAnimSpriteGfx_NecrozmaStar[];
 extern const u16 gBattleAnimSpritePal_NecrozmaStar[];
 // Misc. Key Items
-extern const u32 gItemIcon_SkatesRoller[];
-extern const u16 gItemIconPalette_SkatesRoller[];
+extern const u32 gItemIcon_RollerSkates[];
+extern const u16 gItemIconPalette_RollerSkates[];
 extern const u32 gItemIcon_Bicycle[];
 extern const u16 gItemIconPalette_Bicycle[];
 extern const u32 gItemIcon_MachBike[];

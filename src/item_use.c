@@ -292,20 +292,22 @@ void ItemUseOutOfBattle_RollerSkates(u8 taskId)
 
 static void ItemUseOnFieldCB_RollerSkates(u8 taskId)
 {
+    const u8 *message;
+
     if (FlagGet(FLAG_SYS_ROLLER_SKATES_ACTIVE))
     {
         FlagClear(FLAG_SYS_ROLLER_SKATES_ACTIVE);
         SetPlayerAvatarRollerSkates(FALSE);
+        message = gText_RollerSkatesOff;
     }
     else
     {
         FlagSet(FLAG_SYS_ROLLER_SKATES_ACTIVE);
         SetPlayerAvatarRollerSkates(TRUE);
+        message = gText_RollerSkatesOn;
     }
 
-    ClearPlayerHeldMovementAndUnfreezeObjectEvents();
-    UnlockPlayerFieldControls();
-    DestroyTask(taskId);
+    DisplayItemMessageOnField(taskId, FONT_NORMAL, message, Task_ItemUse_CloseMessageBoxAndReturnToField);
 }
 
 void ItemUseOutOfBattle_Rod(u8 taskId)
