@@ -1313,7 +1313,6 @@ static void ClearObjectEvent(struct ObjectEvent *objectEvent)
     objectEvent->mapNum = MAP_NUM(MAP_UNDEFINED);
     objectEvent->mapGroup = MAP_GROUP(MAP_UNDEFINED);
     objectEvent->movementActionId = MOVEMENT_ACTION_NONE;
-    objectEvent->secondarySpriteId = SPRITE_NONE;
 }
 
 static void ClearAllObjectEvents(void)

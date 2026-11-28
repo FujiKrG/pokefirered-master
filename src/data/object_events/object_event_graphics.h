@@ -2,6 +2,7 @@ const u16 gObjectEventPal_Player[] = INCBIN_U16("graphics/object_events/palettes
 const u16 gObjectEventPal_PlayerUnused[] = INCBIN_U16("graphics/object_events/palettes/player_unused.gbapal"); // Identical except for the transparency
 const u16 gObjectEventPal_PlayerRed[] = INCBIN_U16("graphics/object_events/palettes/player_red.gbapal");
 const u16 gObjectEventPal_PlayerGreen[] = INCBIN_U16("graphics/object_events/palettes/player_green.gbapal");
+const u16 gObjectEventPal_PlayerGreenB[] = INCBIN_U16("graphics/object_events/palettes/green_palette_b.gbapal");
 const u16 gObjectEventPaletteNull1[16] = {};
 const u16 gObjectEventPaletteNull2[16] = {};
 const u16 gObjectEventPaletteNull3[16] = {};
@@ -19,8 +20,8 @@ const u16 gObjectEventPaletteNull14[16] = {};
 const u16 gObjectEventPic_RedNormal[] = INCBIN_U16("graphics/object_events/pics/people/red_normal.4bpp");
 const u16 gObjectEventPic_RedRollerSkates[] = INCBIN_U16("graphics/object_events/pics/people/red_roller_skates.4bpp");
 const u16 gObjectEventPic_RedSurfRun[] = INCBIN_U16("graphics/object_events/pics/people/red_surf_run.4bpp");
-const u16 gObjectEventPic_GreenNormal[] = INCBIN_U16("graphics/object_events/pics/people/green_normal.4bpp");
-const u16 gObjectEventPal_PlayerGreenB[] = INCBIN_U16("graphics/object_events/palettes/green_palette_b.gbapal");
+const u16 gObjectEventPic_GreenNormal[] = INCBIN_U16("graphics/object_events/pics/people/green_normal_a.4bpp");
+const u16 gObjectEventPic_GreenNormalB[] = INCBIN_U16("graphics/object_events/pics/people/green_normal_b.4bpp");
 const u16 gObjectEventPic_GreenRollerSkates[] = INCBIN_U16("graphics/object_events/pics/people/green_roller_skates.4bpp");
 const u16 gObjectEventPic_GreenSurfRun[] = INCBIN_U16("graphics/object_events/pics/people/green_surf_run.4bpp");
 const u16 gObjectEventPal_PlayerReflection[] = INCBIN_U16("graphics/object_events/palettes/player_reflection.gbapal");
@@ -337,8 +338,8 @@ const u32 gObjectEventPic_DreamBall[] = INCBIN_U32("graphics/object_events/pics/
 const u32 gObjectEventPic_BeastBall[] = INCBIN_U32("graphics/object_events/pics/misc/ball_beast.4bpp");
 #ifdef ITEM_STRANGE_BALL
 const u32 gObjectEventPic_StrangeBall[] = INCBIN_U32("graphics/object_events/pics/misc/ball_strange.4bpp");
-#endif //ITEM_STRANGE_BALL
-#endif //OW_FOLLOWERS_POKEBALLS
+#endif // ITEM_STRANGE_BALL
+#endif // OW_FOLLOWERS_POKEBALLS
 
 #if OW_FOLLOWERS_POKEBALLS
 // Palettes are small, so always include all of the palettes (no #ifdef)
@@ -376,8 +377,8 @@ const u16 gObjectEventPal_BeastBall[] = INCBIN_U16("graphics/object_events/pics/
 // Gen VIII
 #ifdef ITEM_STRANGE_BALL
 const u16 gObjectEventPal_StrangeBall[] = INCBIN_U16("graphics/object_events/pics/misc/ball_strange.gbapal");
-#endif //ITEM_STRANGE_BALL
-#endif //OW_FOLLOWERS_POKEBALLS
+#endif // ITEM_STRANGE_BALL
+#endif // OW_FOLLOWERS_POKEBALLS
 
 const u32 gFieldEffectObjectPic_CaveDust[] = INCBIN_U32("graphics/field_effects/pics/cave_dust.4bpp");
 const u16 gFieldEffectObjectPalette_CaveDust[] = INCBIN_U16("graphics/field_effects/palettes/cave_dust.gbapal");
