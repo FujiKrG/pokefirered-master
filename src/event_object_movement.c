@@ -491,6 +491,7 @@ static const struct SpritePalette sObjectEventSpritePalettes[] = {
     {gObjectEventPal_NpcWhiteReflection, OBJ_EVENT_PAL_TAG_NPC_WHITE_REFLECTION},
     {gObjectEventPal_PlayerRed, OBJ_EVENT_PAL_TAG_PLAYER_RED},
     {gObjectEventPal_PlayerGreen, OBJ_EVENT_PAL_TAG_PLAYER_GREEN},
+    {gObjectEventPal_PlayerGreenB, OBJ_EVENT_PAL_TAG_PLAYER_GREEN_B},
     {gObjectEventPal_PlayerRedReflection, OBJ_EVENT_PAL_TAG_PLAYER_RED_REFLECTION},
     {gObjectEventPal_PlayerGreenReflection, OBJ_EVENT_PAL_TAG_PLAYER_GREEN_REFLECTION},
     {gObjectEventPal_BridgeReflection, OBJ_EVENT_PAL_TAG_BRIDGE_REFLECTION},
@@ -1312,6 +1313,7 @@ static void ClearObjectEvent(struct ObjectEvent *objectEvent)
     objectEvent->mapNum = MAP_NUM(MAP_UNDEFINED);
     objectEvent->mapGroup = MAP_GROUP(MAP_UNDEFINED);
     objectEvent->movementActionId = MOVEMENT_ACTION_NONE;
+    objectEvent->secondarySpriteId = SPRITE_NONE;
 }
 
 static void ClearAllObjectEvents(void)

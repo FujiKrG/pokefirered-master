@@ -20,6 +20,7 @@ const u16 gObjectEventPic_RedNormal[] = INCBIN_U16("graphics/object_events/pics/
 const u16 gObjectEventPic_RedRollerSkates[] = INCBIN_U16("graphics/object_events/pics/people/red_roller_skates.4bpp");
 const u16 gObjectEventPic_RedSurfRun[] = INCBIN_U16("graphics/object_events/pics/people/red_surf_run.4bpp");
 const u16 gObjectEventPic_GreenNormal[] = INCBIN_U16("graphics/object_events/pics/people/green_normal.4bpp");
+const u16 gObjectEventPal_PlayerGreenB[] = INCBIN_U16("graphics/object_events/palettes/green_palette_b.gbapal");
 const u16 gObjectEventPic_GreenRollerSkates[] = INCBIN_U16("graphics/object_events/pics/people/green_roller_skates.4bpp");
 const u16 gObjectEventPic_GreenSurfRun[] = INCBIN_U16("graphics/object_events/pics/people/green_surf_run.4bpp");
 const u16 gObjectEventPal_PlayerReflection[] = INCBIN_U16("graphics/object_events/palettes/player_reflection.gbapal");
