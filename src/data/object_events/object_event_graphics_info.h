@@ -1404,6 +1404,7 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_GreenNormal = {
     .affineAnims = gDummySpriteAffineAnimTable,
 };
 
+
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_GreenRollerSkates = {
     .tileTag = TAG_NONE,
     .paletteTag = OBJ_EVENT_PAL_TAG_PLAYER_GREEN,

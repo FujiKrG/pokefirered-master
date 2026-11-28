@@ -33,7 +33,6 @@ static const struct SpriteFrameImage sPicTable_RedRollerSkates[] = {
     overworld_frame(gObjectEventPic_RedRollerSkates, 2, 4, 8),
 };
 
-
 static const struct SpriteFrameImage sPicTable_RedBike[] = {
     overworld_frame(gObjectEventPic_RedBike, 4, 4, 0),
     overworld_frame(gObjectEventPic_RedBike, 4, 4, 1),
@@ -56,6 +55,18 @@ static const struct SpriteFrameImage sPicTable_GreenNormal[] = {
     overworld_frame(gObjectEventPic_GreenNormal, 4, 4, 6),
     overworld_frame(gObjectEventPic_GreenNormal, 4, 4, 7),
     overworld_frame(gObjectEventPic_GreenNormal, 4, 4, 8),
+};
+
+static const struct SpriteFrameImage sPicTable_GreenNormalB[] = {
+    overworld_frame(gObjectEventPic_GreenNormalB, 4, 4, 0),
+    overworld_frame(gObjectEventPic_GreenNormalB, 4, 4, 1),
+    overworld_frame(gObjectEventPic_GreenNormalB, 4, 4, 2),
+    overworld_frame(gObjectEventPic_GreenNormalB, 4, 4, 3),
+    overworld_frame(gObjectEventPic_GreenNormalB, 4, 4, 4),
+    overworld_frame(gObjectEventPic_GreenNormalB, 4, 4, 5),
+    overworld_frame(gObjectEventPic_GreenNormalB, 4, 4, 6),
+    overworld_frame(gObjectEventPic_GreenNormalB, 4, 4, 7),
+    overworld_frame(gObjectEventPic_GreenNormalB, 4, 4, 8),
 };
 
 static const struct SpriteFrameImage sPicTable_GreenRollerSkates[] = {
@@ -1778,13 +1789,13 @@ static const struct SpriteFrameImage sPicTable_PokeBall[] = {
 
 #if OW_FOLLOWERS_POKEBALLS
 
-#define POKEBALL_PIC_FRAMES(name)                              \
-    overworld_frame(gObjectEventPic_##name##Ball, 2, 4, 0),    \
-    overworld_frame(gObjectEventPic_##name##Ball, 2, 4, 1),    \
-    overworld_frame(gObjectEventPic_##name##Ball, 2, 4, 2),    \
-    overworld_frame(gObjectEventPic_##name##Ball, 2, 4, 3),    \
-    overworld_frame(gObjectEventPic_##name##Ball, 2, 4, 4),    \
-    overworld_frame(gObjectEventPic_##name##Ball, 2, 4, 0)
+#define POKEBALL_PIC_FRAMES(name)                               \
+    overworld_frame(gObjectEventPic_##name##Ball, 2, 4, 0),     \
+        overworld_frame(gObjectEventPic_##name##Ball, 2, 4, 1), \
+        overworld_frame(gObjectEventPic_##name##Ball, 2, 4, 2), \
+        overworld_frame(gObjectEventPic_##name##Ball, 2, 4, 3), \
+        overworld_frame(gObjectEventPic_##name##Ball, 2, 4, 4), \
+        overworld_frame(gObjectEventPic_##name##Ball, 2, 4, 0)
 
 static const struct SpriteFrameImage sPicTable_Ball_MASTER[] = {
     POKEBALL_PIC_FRAMES(Master),
@@ -1868,5 +1879,5 @@ static const struct SpriteFrameImage sPicTable_Ball_BEAST[] = {
 static const struct SpriteFrameImage sPicTable_Ball_STRANGE[] = {
     POKEBALL_PIC_FRAMES(Strange),
 };
-#endif //ITEM_STRANGE_BALL
-#endif //OW_FOLLOWERS_POKEBALLS
+#endif // ITEM_STRANGE_BALL
+#endif // OW_FOLLOWERS_POKEBALLS

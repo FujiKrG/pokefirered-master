@@ -476,6 +476,137 @@ static const u8 gInitialMovementTypeFacingDirections[MOVEMENT_TYPES_COUNT] = {
 #include "data/object_events/object_event_graphics_info.h"
 #include "data/object_events/object_event_graphics_info_followers.h"
 
+static void SpriteCallback_GreenNormalBOverlay(struct Sprite *sprite);
+
+static const struct SpriteTemplate sGreenNormalB_SpriteTemplate = {
+    .tileTag = TAG_NONE,
+    .paletteTag = TAG_NONE,
+    .oam = &gObjectEventBaseOam_32x32,
+    .anims = sAnimTable_GreenNormal,
+    .images = sPicTable_GreenNormalB,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = SpriteCallback_GreenNormalBOverlay,
+};
+
+static u8 sGreenNormalB_SpriteId = MAX_SPRITES;
+
+static void DestroyGreenNormalBOverlay(void)
+{
+    if (sGreenNormalB_SpriteId != MAX_SPRITES)
+    {
+        if (gSprites[sGreenNormalB_SpriteId].inUse)
+            DestroySprite(&gSprites[sGreenNormalB_SpriteId]);
+
+        sGreenNormalB_SpriteId = MAX_SPRITES;
+    }
+}
+
+static void SyncGreenNormalBOverlay(struct ObjectEvent *objectEvent)
+{
+    struct Sprite *mainSprite;
+    struct Sprite *overlaySprite;
+
+    if (sGreenNormalB_SpriteId == MAX_SPRITES)
+        return;
+
+    if (!gSprites[sGreenNormalB_SpriteId].inUse)
+    {
+        sGreenNormalB_SpriteId = MAX_SPRITES;
+        return;
+    }
+
+    mainSprite = &gSprites[objectEvent->spriteId];
+    overlaySprite = &gSprites[sGreenNormalB_SpriteId];
+
+    overlaySprite->x = mainSprite->x;
+    overlaySprite->y = mainSprite->y;
+    overlaySprite->x2 = mainSprite->x2;
+    overlaySprite->y2 = mainSprite->y2;
+
+    overlaySprite->centerToCornerVecX = mainSprite->centerToCornerVecX;
+    overlaySprite->centerToCornerVecY = mainSprite->centerToCornerVecY;
+
+    overlaySprite->subpriority = mainSprite->subpriority;
+    overlaySprite->oam.priority = mainSprite->oam.priority;
+
+    overlaySprite->coordOffsetEnabled = mainSprite->coordOffsetEnabled;
+    overlaySprite->invisible = mainSprite->invisible;
+
+    overlaySprite->oam.paletteNum = 12;
+}
+
+static void CreateGreenNormalBOverlay(u8 objectEventId)
+{
+    struct ObjectEvent *objectEvent = &gObjectEvents[objectEventId];
+    struct Sprite *mainSprite;
+    struct Sprite *overlaySprite;
+    u8 spriteId;
+
+    if (objectEvent->movementType != MOVEMENT_TYPE_PLAYER || objectEvent->graphicsId != OBJ_EVENT_GFX_GREEN_NORMAL)
+        return;
+
+    DestroyGreenNormalBOverlay();
+
+    mainSprite = &gSprites[objectEvent->spriteId];
+
+    spriteId = CreateSprite(
+        &sGreenNormalB_SpriteTemplate,
+        mainSprite->x,
+        mainSprite->y,
+        mainSprite->subpriority);
+
+    if (spriteId == MAX_SPRITES)
+        return;
+    if (spriteId < objectEvent->spriteId)
+    {
+        DestroySprite(&gSprites[spriteId]);
+        return;
+    }
+    sGreenNormalB_SpriteId = spriteId;
+    overlaySprite = &gSprites[spriteId];
+
+    overlaySprite->sObjEventId = objectEventId;
+    overlaySprite->oam.paletteNum = 12;
+    overlaySprite->animBeginning = FALSE;
+    overlaySprite->animPaused = TRUE;
+
+    SyncGreenNormalBOverlay(objectEvent);
+}
+
+static void SpriteCallback_GreenNormalBOverlay(struct Sprite *sprite)
+{
+    struct ObjectEvent *objectEvent;
+    struct Sprite *mainSprite;
+    const union AnimCmd *animCmd;
+
+    objectEvent = &gObjectEvents[sprite->sObjEventId];
+
+    if (objectEvent->spriteId >= MAX_SPRITES || !gSprites[objectEvent->spriteId].inUse || objectEvent->graphicsId != OBJ_EVENT_GFX_GREEN_NORMAL)
+    {
+        DestroyGreenNormalBOverlay();
+        return;
+    }
+
+    mainSprite = &gSprites[objectEvent->spriteId];
+
+    SyncGreenNormalBOverlay(objectEvent);
+
+    animCmd = &mainSprite->anims[mainSprite->animNum][mainSprite->animCmdIndex];
+
+    if (animCmd->type >= 0 && animCmd->frame.imageValue < 9)
+    {
+        RequestSpriteFrameImageCopy(
+            animCmd->frame.imageValue,
+            sprite->oam.tileNum,
+            sPicTable_GreenNormalB);
+
+        SetSpriteOamFlipBits(sprite, animCmd->frame.hFlip, animCmd->frame.vFlip);
+    }
+
+    sprite->animBeginning = FALSE;
+    sprite->animPaused = TRUE;
+}
+
 static const struct SpritePalette sObjectEventSpritePalettes[] = {
     {gObjectEventPal_Npc1, OBJ_EVENT_PAL_TAG_NPC_1},
     {gObjectEventPal_Npc2, OBJ_EVENT_PAL_TAG_NPC_2},
@@ -1639,6 +1770,8 @@ void RemoveObjectEventByLocalIdAndMap(u8 localId, u8 mapNum, u8 mapGroup)
 
 static void RemoveObjectEventInternal(struct ObjectEvent *objectEvent)
 {
+    if (objectEvent->movementType == MOVEMENT_TYPE_PLAYER)
+        DestroyGreenNormalBOverlay();
     struct SpriteFrameImage image;
     image.size = GetObjectEventGraphicsInfo(objectEvent->graphicsId)->size;
     gSprites[objectEvent->spriteId].images = &image;
@@ -1809,7 +1942,7 @@ static u8 TrySetupObjectEventSprite(const struct ObjectEventTemplate *objectEven
     if (objectEvent->graphicsId & OBJ_EVENT_MON && objectEvent->graphicsId & OBJ_EVENT_MON_SHINY)
         objectEvent->shiny = TRUE;
 
-    spriteId = CreateSprite(spriteTemplate, 0, 0, 0);
+    spriteId = CreateSpriteAtEnd(spriteTemplate, 0, 0, 0);
     if (spriteId == MAX_SPRITES)
     {
         gObjectEvents[objectEventId].active = FALSE;
@@ -1835,6 +1968,7 @@ static u8 TrySetupObjectEventSprite(const struct ObjectEventTemplate *objectEven
         StartSpriteAnim(sprite, GetFaceDirectionAnimNum(objectEvent->facingDirection));
 
     SetObjectSubpriorityByElevation(objectEvent->previousElevation, sprite, 1);
+    CreateGreenNormalBOverlay(objectEventId);
     UpdateObjectEventVisibility(objectEvent, sprite);
     return objectEventId;
 }
@@ -1859,7 +1993,7 @@ static u8 TrySpawnObjectEventTemplate(const struct ObjectEventTemplate *objectEv
     gSprites[gObjectEvents[objectEventId].spriteId].images = graphicsInfo->images;
     if (subspriteTables)
         SetSubspriteTables(&gSprites[gObjectEvents[objectEventId].spriteId], subspriteTables);
-
+    CreateGreenNormalBOverlay(objectEventId);
     return objectEventId;
 }
 
@@ -2921,9 +3055,15 @@ static void ObjectEventSetGraphics(struct ObjectEvent *objectEvent, const struct
 
 void ObjectEventSetGraphicsId(struct ObjectEvent *objectEvent, u16 graphicsId)
 {
+    if (objectEvent->movementType == MOVEMENT_TYPE_PLAYER)
+        DestroyGreenNormalBOverlay();
+
     objectEvent->graphicsId = graphicsId;
     ObjectEventSetGraphics(objectEvent, GetObjectEventGraphicsInfo(graphicsId));
     objectEvent->graphicsId = graphicsId;
+
+    if (objectEvent->movementType == MOVEMENT_TYPE_PLAYER)
+        CreateGreenNormalBOverlay(objectEvent - gObjectEvents);
 }
 
 void ObjectEventSetGraphicsIdByLocalIdAndMap(u8 localId, u8 mapNum, u8 mapGroup, u16 graphicsId)
@@ -3120,14 +3260,14 @@ u8 LoadPlayerObjectEventPalette(u8 gender)
     }
     u8 paletteNum = LoadObjectEventPalette(paletteTag);
 
-if (gender == FEMALE)
-{
-    LoadPalette(gObjectEventPal_PlayerGreenB, OBJ_PLTT_ID(12), PLTT_SIZE_4BPP);
-    ApplyGlobalFieldPaletteTint(12);
-    gReservedSpritePaletteCount = 13;
-}
+    if (gender == FEMALE)
+    {
+        LoadPalette(gObjectEventPal_PlayerGreenB, OBJ_PLTT_ID(12), PLTT_SIZE_4BPP);
+        ApplyGlobalFieldPaletteTint(12);
+        gReservedSpritePaletteCount = 13;
+    }
 
-return paletteNum;
+    return paletteNum;
 }
 
 static u8 LoadSpritePaletteIfTagExists(const struct SpritePalette *spritePalette)
