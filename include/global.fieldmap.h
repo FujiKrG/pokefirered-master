@@ -278,8 +278,7 @@ struct ObjectEvent
     /*0x21*/ u8 directionSequenceIndex;
     /*0x22*/ u8 playerCopyableMovement; // COPY_MOVE_*
     /*0x23*/ u8 spriteId;
-    /*0x24*/ u8 secondarySpriteId;
-    /*size = 0x28*/
+    // /*0x24*/
 };
 
 struct ObjectEventGraphicsInfo

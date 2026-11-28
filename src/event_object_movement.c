@@ -3119,7 +3119,16 @@ u8 LoadPlayerObjectEventPalette(u8 gender)
         paletteTag = OBJ_EVENT_PAL_TAG_PLAYER_GREEN;
         break;
     }
-    return LoadObjectEventPalette(paletteTag);
+    u8 paletteNum = LoadObjectEventPalette(paletteTag);
+
+if (gender == FEMALE)
+{
+    LoadPalette(gObjectEventPal_PlayerGreenB, OBJ_PLTT_ID(12), PLTT_SIZE_4BPP);
+    ApplyGlobalFieldPaletteTint(12);
+    gReservedSpritePaletteCount = 13;
+}
+
+return paletteNum;
 }
 
 static u8 LoadSpritePaletteIfTagExists(const struct SpritePalette *spritePalette)
